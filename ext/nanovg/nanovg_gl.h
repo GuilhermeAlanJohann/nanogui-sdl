@@ -1072,7 +1072,7 @@ static void glnvg__renderFlush(void* uptr)
 	int i;
 
 	if (gl->ncalls > 0) {
-
+		
 		// Setup require GL state.
 		glUseProgram(gl->shader.prog);
 
@@ -1087,7 +1087,7 @@ static void glnvg__renderFlush(void* uptr)
 		glStencilMask(0xffffffff);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_ALWAYS, 0, 0xffffffff);
-		glActiveTexture(GL_TEXTURE0);
+		_glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		#if NANOVG_GL_USE_STATE_FILTER
 		gl->boundTexture = 0;
@@ -1096,7 +1096,7 @@ static void glnvg__renderFlush(void* uptr)
 		gl->stencilFuncRef = 0;
 		gl->stencilFuncMask = 0xffffffff;
 		#endif
-
+		
 #if NANOVG_GL_USE_UNIFORMBUFFER
 		// Upload ubo for frag shaders
 		glBindBuffer(GL_UNIFORM_BUFFER, gl->fragBuf);
@@ -1113,11 +1113,10 @@ static void glnvg__renderFlush(void* uptr)
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(NVGvertex), (const GLvoid*)(size_t)0);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(NVGvertex), (const GLvoid*)(0 + 2*sizeof(float)));
-
 		// Set view and texture just once per frame.
 		glUniform1i(gl->shader.loc[GLNVG_LOC_TEX], 0);
 		glUniform2fv(gl->shader.loc[GLNVG_LOC_VIEWSIZE], 1, gl->view);
-
+		
 #if NANOVG_GL_USE_UNIFORMBUFFER
 		glBindBuffer(GL_UNIFORM_BUFFER, gl->fragBuf);
 #endif

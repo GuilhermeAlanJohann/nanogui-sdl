@@ -17,7 +17,7 @@
 #include <include/textbox.h>
 #include <include/opengl.h>
 #include <include/theme.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <regex>
 
 NAMESPACE_BEGIN(nanogui)
@@ -317,14 +317,14 @@ bool TextBox::focusEvent(bool focused) {
     return true;
 }
 
-bool TextBox::keyboardEvent(int key, int /* scancode */, int action, int modifiers)
+bool TextBox::keyboardEvent(int key, int scancode, int action, int modifiers)
 {
     if (mEditable && focused()) {
-        if (action == SDL_KEYDOWN /*|| action == GLFW_REPEAT*/)
+        if (action == SDL_PRESSED /*|| action == GLFW_REPEAT*/)
         {
-            if (key == SDLK_LEFT )
+            if (scancode == SDL_SCANCODE_LEFT )
             {
-                if (modifiers == SDLK_LSHIFT)
+                if (modifiers & KMOD_SHIFT)
                 {
                     if (mSelectionPos == -1)
                         mSelectionPos = mCursorPos;
@@ -334,8 +334,8 @@ bool TextBox::keyboardEvent(int key, int /* scancode */, int action, int modifie
 
                 if (mCursorPos > 0)
                     mCursorPos--;
-            } else if (key == SDLK_RIGHT) {
-                if (modifiers == SDLK_LSHIFT) {
+            } else if (scancode == SDL_SCANCODE_RIGHT) {
+                if (modifiers & KMOD_SHIFT) {
                     if (mSelectionPos == -1)
                         mSelectionPos = mCursorPos;
                 } else {
@@ -344,8 +344,8 @@ bool TextBox::keyboardEvent(int key, int /* scancode */, int action, int modifie
 
                 if (mCursorPos < (int) mValueTemp.length())
                     mCursorPos++;
-            } else if (key == SDLK_HOME) {
-                if (modifiers == SDLK_LSHIFT) {
+            } else if (scancode == SDL_SCANCODE_HOME) {
+                if (modifiers & KMOD_SHIFT) {
                     if (mSelectionPos == -1)
                         mSelectionPos = mCursorPos;
                 } else {
@@ -353,8 +353,8 @@ bool TextBox::keyboardEvent(int key, int /* scancode */, int action, int modifie
                 }
 
                 mCursorPos = 0;
-            } else if (key == SDLK_END) {
-                if (modifiers == SDLK_LSHIFT) {
+            } else if (scancode == SDL_SCANCODE_END) {
+                if (modifiers & KMOD_SHIFT) {
                     if (mSelectionPos == -1)
                         mSelectionPos = mCursorPos;
                 } else {
@@ -362,39 +362,39 @@ bool TextBox::keyboardEvent(int key, int /* scancode */, int action, int modifie
                 }
 
                 mCursorPos = (int) mValueTemp.size();
-            } else if (key == SDLK_BACKSPACE) {
+            } else if (scancode == SDL_SCANCODE_BACKSPACE) {
                 if (!deleteSelection()) {
                     if (mCursorPos > 0) {
                         mValueTemp.erase(mValueTemp.begin() + mCursorPos - 1);
                         mCursorPos--;
                     }
                 }
-            } else if (key == SDLK_DELETE) {
+            } else if (scancode == SDL_SCANCODE_DELETE) {
                 if (!deleteSelection()) {
                     if (mCursorPos < (int) mValueTemp.length())
                         mValueTemp.erase(mValueTemp.begin() + mCursorPos);
                 }
             }
-            else if (key == SDLK_RETURN)
+            else if (scancode == SDL_SCANCODE_RETURN)
             {
                 if (!mCommitted)
                     focusEvent(false);
             }
-            else if (key == SDLK_a && modifiers == SDLK_RCTRL)
+            else if (scancode == SDL_SCANCODE_A && modifiers & KMOD_CTRL)
             {
                 mCursorPos = (int) mValueTemp.length();
                 mSelectionPos = 0;
             }
-            else if (key == SDLK_x && modifiers == SDLK_RCTRL)
+            else if (scancode == SDL_SCANCODE_X && modifiers & KMOD_CTRL)
             {
                 copySelection();
                 deleteSelection();
             }
-            else if (key == SDLK_c && modifiers == SDLK_RCTRL)
+            else if (scancode == SDL_SCANCODE_C && modifiers & KMOD_CTRL)
             {
                 copySelection();
             }
-            else if (key == SDLK_v && modifiers == SDLK_RCTRL)
+            else if (scancode == SDL_SCANCODE_V && modifiers & KMOD_CTRL)
             {
                 deleteSelection();
                 pasteFromClipboard();
